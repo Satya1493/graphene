@@ -707,6 +707,7 @@ static void create_instance(struct pal_sec* pal_sec) {
 
 static int load_manifest(int fd, toml_table_t** manifest_root_ptr) {
     int ret = 0;
+    toml_table_t* manifest_root = NULL;
 
     int nbytes = INLINE_SYSCALL(lseek, 3, fd, 0, SEEK_END);
     if (IS_ERR(nbytes)) {
@@ -722,7 +723,7 @@ static int load_manifest(int fd, toml_table_t** manifest_root_ptr) {
     }
 
     char errbuf[256];
-    toml_table_t* manifest_root = toml_parse(manifest_addr, errbuf, sizeof(errbuf));
+    manifest_root = toml_parse(manifest_addr, errbuf, sizeof(errbuf));
     if (!manifest_root) {
         SGX_DBG(DBG_E, "PAL failed at parsing the manifest: %s\n"
                 "Graphene switched to the TOML format, please update the manifest "
